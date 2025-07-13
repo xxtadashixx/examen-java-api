@@ -13,20 +13,7 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 
 ## 📁 Arborescence
 
-    ├── src/ # Code source Java
-    │ ├── Main.java
-    │ ├── Ticket.java
-    │ ├── TicketService.java
-    │ ├── APIHandler.java
-    │ ├── StaticHandler.java
-    ├── public/ # Interface HTML
-    │ └── index.html
-    ├── lib/ # Dépendance externe (Gson)
-    │ └── gson-2.8.9.jar
-    ├── Dockerfile # Image Docker pour compiler et exécuter
-    ├── .dockerignore
-    ├── .gitignore
-    └── README.md
+<pre><code>```text bank-queue-system/ ├── src/ │ ├── Main.java │ ├── Ticket.java │ ├── TicketService.java │ ├── APIHandler.java │ ├── StaticHandler.java │ └── ... ├── public/ │ └── index.html ├── lib/ │ └── gson-2.8.9.jar ├── assets/ │ └── screenshot3.png ├── Dockerfile ├── .dockerignore ├── .gitignore ├── README.md └── .github/ └── workflows/ └── build.yml ```</code></pre>
 
 
 
@@ -80,11 +67,7 @@ L’interface utilisateur est dynamique et intuitive :
         Tickets appelés et traités
 
     Aperçu de la responsivité de l'interface 
-    
-![Aperçu interface](assets/screenshot1.png)
-![Aperçu interface](assets/screenshot2.png)
 ![Aperçu interface](assets/screenshot3.png)
-
 
 🧠 Objectifs pédagogiques
 
