@@ -12,6 +12,9 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 ---
 
 ## 📁 Arborescence
+    ├── .github/
+    | └── workflows/
+    |   └── render-deploy.yml
     ├── assets/
     | └── screenshot3.png
     ├── lib/
@@ -74,10 +77,11 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 | `/etat`        | GET     | Donne la file d’attente et les appels |
 
 🖼️ Interface Web
-L’interface utilisateur est dynamique et intuitive :
-    Un bouton pour demander un ticket
-    Trois boutons pour appeler depuis les caisses
-    Deux tableaux :
+
+    L’interface utilisateur est dynamique et intuitive :
+    - Un bouton pour demander un ticket
+    - Trois boutons pour appeler depuis les caisses
+    - Deux tableaux :
         Tickets en attente
         Tickets appelés et traités
 
@@ -96,5 +100,24 @@ L’interface utilisateur est dynamique et intuitive :
 
     Déploiement en conteneur Docker
 
+ ## 🚀 projet deployer via render
+
+    L’application est déployée automatiquement à chaque git push sur la branche master grâce à GitHub Actions.
+    
+    🧱 Stack Render utilisée
+
+    Déploiement via un conteneur Docker (Dockerfile)
+
+    Application Java autonome (sans framework)
+
+    Serveur HTTP intégré
+
+    Interface web statique intégrée dans /public
+
+🌐 Accès à l’application déployée
+
+    L’application est accessible en ligne ici :
+        ➡️ https://file-banque-rina.onrender.com
+
 👤 Auteur
-Projet réalisé par Rynah – Étudiant DevOps & Infrastructure
+Projet réalisé par Rynah – Étudiant DevOps & Infrastructure cloud
