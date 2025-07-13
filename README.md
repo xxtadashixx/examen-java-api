@@ -13,20 +13,20 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 
 ## 📁 Arborescence
 
-├── src/ # Code source Java
-│ ├── Main.java
-│ ├── Ticket.java
-│ ├── TicketService.java
-│ ├── APIHandler.java
-│ ├── StaticHandler.java
-├── public/ # Interface HTML
-│ └── index.html
-├── lib/ # Dépendance externe (Gson)
-│ └── gson-2.8.9.jar
-├── Dockerfile # Image Docker pour compiler et exécuter
-├── .dockerignore
-├── .gitignore
-└── README.md
+    ├── src/ # Code source Java
+    │ ├── Main.java
+    │ ├── Ticket.java
+    │ ├── TicketService.java
+    │ ├── APIHandler.java
+    │ ├── StaticHandler.java
+    ├── public/ # Interface HTML
+    │ └── index.html
+    ├── lib/ # Dépendance externe (Gson)
+    │ └── gson-2.8.9.jar
+    ├── Dockerfile # Image Docker pour compiler et exécuter
+    ├── .dockerignore
+    ├── .gitignore
+    └── README.md
 
 
 
@@ -45,17 +45,22 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 
 ### ⚙️ Option 1 – Lancer en local
 
-#### 1. Compiler
+#### 1. Compiler et lancer
 
         javac -cp "lib/gson-2.8.9.jar" src/*.java
 
         java -cp "lib/gson-2.8.9.jar:src" Main
+
+### ou simplement avec la commande bash qui lancera le projet automatiquement 
+        bash build.sh        
 
 ##  🐳 Option 2 – Lancer avec Docker
 
 ### 1. Construire l’image Docker
 
         docker build -t bank-queue-app .
+
+### 2. lancer l’image Docker avec le port 8080       
         
         docker run -p 8080:8080 bank-queue-app
 
@@ -67,14 +72,19 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 | `/etat`        | GET     | Donne la file d’attente et les appels |
 
 🖼️ Interface Web
-L’interface utilisateur est simple et intuitive :
+L’interface utilisateur est dynamique et intuitive :
     Un bouton pour demander un ticket
     Trois boutons pour appeler depuis les caisses
     Deux tableaux :
         Tickets en attente
-        Tickets appelés
+        Tickets appelés et traités
 
-    (screenshot)
+    Aperçu de la responsivité de l'interface 
+    
+![Aperçu interface](assets/screenshot1.png)
+![Aperçu interface](assets/screenshot2.png)
+![Aperçu interface](assets/screenshot3.png)
+
 
 🧠 Objectifs pédagogiques
 

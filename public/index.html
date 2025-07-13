@@ -3,85 +3,220 @@
 <head>
   <meta charset="UTF-8">
   <title>Guichet de Banque - File d'attente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --gray: #adb5bd;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      background-color: #f4f6f9;
-      color: #333;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: var(--dark);
+      min-height: 100vh;
     }
+    
     h1 {
-      color: #0077cc;
-    }
-    .section {
-      background: #fff;
-      padding: 1rem;
+      color: var(--primary);
+      font-weight: 600;
       margin-bottom: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 2.2rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     }
+    
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+    
+    h2 {
+      color: var(--secondary);
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    
     button {
-      background-color: #0077cc;
+      background-color: var(--primary);
       color: white;
       border: none;
-      padding: 0.6rem 1rem;
-      margin: 0.3rem;
-      border-radius: 5px;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
+    
     button:hover {
-      background-color: #005fa3;
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #ticket-message, #appel-message {
+      padding: 0.8rem;
+      border-radius: 8px;
+      background-color: rgba(72, 149, 239, 0.1);
+      color: var(--primary-dark);
+      font-weight: 500;
       margin-top: 1rem;
     }
-    th, td {
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      text-align: center;
+    
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 1rem;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
+    
+    th, td {
+      padding: 0.8rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
     th {
-      background-color: #eaf4fb;
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover td {
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background-color: var(--accent);
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Animation pour les nouveaux tickets */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    tr {
+      animation: fadeIn 0.4s ease forwards;
     }
   </style>
 </head>
 <body>
-  <h1>🧾 Guichet Banque - Système de File d’attente</h1>
+  <h1>🧾 Guichet Banque - Système de File d'attente</h1>
 
-  <div class="section">
-    <h2>🎟️ Obtenir un ticket</h2>
-    <button onclick="getTicket()">Demander un ticket</button>
-    <p id="ticket-message"></p>
-  </div>
+  <div class="container">
+    <div class="section">
+      <h2>🎟️ Obtenir un ticket</h2>
+      <div class="button-group">
+        <button onclick="getTicket()">
+          <span>Demander un ticket</span>
+        </button>
+      </div>
+      <p id="ticket-message"></p>
+    </div>
 
-  <div class="section">
-    <h2>🧑‍💼 Appel des tickets par les caisses</h2>
-    <button onclick="callNext(1)">Caisse 1</button>
-    <button onclick="callNext(2)">Caisse 2</button>
-    <button onclick="callNext(3)">Caisse 3</button>
-    <p id="appel-message"></p>
-  </div>
+    <div class="section">
+      <h2>🧑‍💼 Appel des tickets par les caisses</h2>
+      <div class="button-group">
+        <button onclick="callNext(1)">Caisse 1</button>
+        <button onclick="callNext(2)">Caisse 2</button>
+        <button onclick="callNext(3)">Caisse 3</button>
+      </div>
+      <p id="appel-message"></p>
+    </div>
 
-  <div class="section">
-    <h2>📋 Tickets en attente (<span id="nb-attente">0</span>)</h2>
-    <table>
-      <thead>
-        <tr><th>Ticket</th><th>Heure</th></tr>
-      </thead>
-      <tbody id="liste-attente"></tbody>
-    </table>
-  </div>
+    <div class="section">
+      <h2>📋 Tickets en attente <span id="nb-attente" class="badge">0</span></h2>
+      <table>
+        <thead>
+          <tr><th>Ticket</th><th>Heure</th></tr>
+        </thead>
+        <tbody id="liste-attente"></tbody>
+      </table>
+    </div>
 
-  <div class="section">
-    <h2>📢 Tickets appelés et traités</h2>
-    <table>
-      <thead>
-        <tr><th>Ticket</th><th>Caisse</th><th>Heure</th></tr>
-      </thead>
-      <tbody id="liste-appels"></tbody>
-    </table>
+    <div class="section">
+      <h2>📢 Tickets appelés et traités</h2>
+      <table>
+        <thead>
+          <tr><th>Ticket</th><th>Caisse</th><th>Heure</th></tr>
+        </thead>
+        <tbody id="liste-appels"></tbody>
+      </table>
+    </div>
   </div>
 
   <script>
@@ -91,7 +226,7 @@
       fetch(`${API}/ticket`, { method: "POST" })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("ticket-message").innerText = `Votre ticket est : ${data.code}`;
+          document.getElementById("ticket-message").innerText = `Votre ticket est le : ${data.code}`;
           refresh();
         });
     }
@@ -107,7 +242,7 @@
         })
         .then(data => {
           if (data) {
-            document.getElementById("appel-message").innerText = `🎤 Ticket ${data.code} à la caisse ${data.numeroAppel}`;
+            document.getElementById("appel-message").innerText = `🎤 Le Ticket ${data.code} est appelé à la caisse N°${data.numeroAppel}`;
             refresh();
           }
         });
@@ -140,6 +275,9 @@
 
     // Chargement initial
     refresh();
+    
+    // Rafraîchissement automatique toutes les 5 secondes
+    setInterval(refresh, 5000);
   </script>
 </body>
 </html>
