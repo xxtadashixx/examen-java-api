@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Guichet de Banque - File d'attente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    h1 {
+      color: #0077cc;
+    }
+    .section {
+      background: #fff;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      margin: 0.3rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #eaf4fb;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧾 Guichet Banque - Système de File d’attente</h1>
+
+  <div class="section">
+    <h2>🎟️ Obtenir un ticket</h2>
+    <button onclick="getTicket()">Demander un ticket</button>
+    <p id="ticket-message"></p>
+  </div>
+
+  <div class="section">
+    <h2>🧑‍💼 Appel des tickets par les caisses</h2>
+    <button onclick="callNext(1)">Caisse 1</button>
+    <button onclick="callNext(2)">Caisse 2</button>
+    <button onclick="callNext(3)">Caisse 3</button>
+    <p id="appel-message"></p>
+  </div>
+
+  <div class="section">
+    <h2>📋 Tickets en attente (<span id="nb-attente">0</span>)</h2>
+    <table>
+      <thead>
+        <tr><th>Ticket</th><th>Heure</th></tr>
+      </thead>
+      <tbody id="liste-attente"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>📢 Tickets appelés et traités</h2>
+    <table>
+      <thead>
+        <tr><th>Ticket</th><th>Caisse</th><th>Heure</th></tr>
+      </thead>
+      <tbody id="liste-appels"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const API = "http://localhost:8080";
+
+    function getTicket() {
+      fetch(`${API}/ticket`, { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("ticket-message").innerText = `Votre ticket est : ${data.code}`;
+          refresh();
+        });
+    }
+
+    function callNext(caisse) {
+      fetch(`${API}/caisse/${caisse}`, { method: "POST" })
+        .then(res => {
+          if (res.status === 204) {
+            document.getElementById("appel-message").innerText = "Aucun ticket en attente";
+            return;
+          }
+          return res.json();
+        })
+        .then(data => {
+          if (data) {
+            document.getElementById("appel-message").innerText = `🎤 Ticket ${data.code} à la caisse ${data.numeroAppel}`;
+            refresh();
+          }
+        });
+    }
+
+    function refresh() {
+      fetch(`${API}/etat`)
+        .then(res => res.json())
+        .then(data => {
+          const attente = data.enAttente;
+          const appels = data.appels;
+
+          document.getElementById("nb-attente").innerText = data.totalAttente;
+
+          let htmlAttente = "";
+          attente.forEach(t => {
+            const date = new Date(t.timestamp).toLocaleTimeString();
+            htmlAttente += `<tr><td>${t.code}</td><td>${date}</td></tr>`;
+          });
+          document.getElementById("liste-attente").innerHTML = htmlAttente;
+
+          let htmlAppels = "";
+          appels.forEach(t => {
+            const date = new Date(t.timestamp).toLocaleTimeString();
+            htmlAppels += `<tr><td>${t.code}</td><td>${t.numeroAppel}</td><td>${date}</td></tr>`;
+          });
+          document.getElementById("liste-appels").innerHTML = htmlAppels;
+        });
+    }
+
+    // Chargement initial
+    refresh();
+  </script>
+</body>
+</html>

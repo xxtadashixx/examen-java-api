@@ -1,0 +1,20 @@
+# Fichiers compilés
+*.class
+
+# Dépendances locales
+*.jar
+
+# Docker
+*.log
+
+# IDE & éditeurs
+.idea/
+.vscode/
+
+#  Dossiers de sortie
+out/
+target/
+build/
+
+# Système
+Thumbs.db
