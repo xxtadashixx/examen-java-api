@@ -2,6 +2,9 @@ FROM openjdk:17-slim
 
 WORKDIR /app
 
+# Installation de curl
+RUN apt-get update && apt-get install -y curl
+
 COPY src/ ./src/
 COPY public/ ./public/
 
