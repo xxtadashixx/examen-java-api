@@ -35,5 +35,4 @@ jobs:
 
     steps:
     - name:  Appeler le webhook Render
-      run: |
-        curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+      run: echo "✅ Déploiement automatique effectué via Render car GitHub auto-deploy est activé"
