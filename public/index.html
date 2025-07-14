@@ -220,8 +220,7 @@
   </div>
 
   <script>
-    const API = "http://localhost:8080";
-
+    const API = ""; //chemin relatif ou URL de l'API
     function getTicket() {
       fetch(`${API}/ticket`, { method: "POST" })
         .then(res => res.json())
