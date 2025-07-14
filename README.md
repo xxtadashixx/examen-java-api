@@ -3,7 +3,7 @@
 Ce projet est une application Java simple (sans framework) qui simule un système de ticket comme dans une banque avec plusieurs caisses. Il permet de :
 
 - Générer un ticket aléatoire (ex : A025)
-- Appeler le prochain ticket à une caisse (Caisse 1, 2, 3…)
+- Appeler le prochain ticket à une caisse (Caisse 1, 2, 3)
 - Afficher les tickets en attente
 - Afficher les tickets déjà appelés
 - Utiliser une interface web claire et intuitive
