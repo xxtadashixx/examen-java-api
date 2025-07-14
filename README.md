@@ -117,7 +117,7 @@ Ce projet est une application Java simple (sans framework) qui simule un systèm
 🌐 Accès à l’application déployée
 
     L’application est accessible en ligne ici :
-        ➡️ https://file-banque-rina.onrender.com
+        ➡️ https://file-banque-rynah.onrender.com
 
 👤 Auteur
 Projet réalisé par Rynah – Étudiant DevOps & Infrastructure cloud
