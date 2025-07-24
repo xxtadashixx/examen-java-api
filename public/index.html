@@ -39,7 +39,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
-      max-width: 1400px;
+      max-width: 1800px;
       margin: 0 auto;
     }
     
@@ -109,21 +109,51 @@
       margin-top: 1rem;
     }
     
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
+    .table-wrapper {
       margin-top: 1rem;
-      background: white;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .table-container {
+      max-height: 350px;
+      overflow-y: auto;
+      margin-top: -1px; 
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      position: relative;
+      table-layout: fixed; /* Assure que les colonnes ont une largeur fixe */
     }
     
     th, td {
       padding: 0.8rem 1rem;
       text-align: center;
       border-bottom: 1px solid rgba(0,0,0,0.05);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    /* Largeurs spécifiques pour les colonnes */
+    .col-ticket {
+      width: 30%;
+    }
+    
+    .col-heure {
+      width: 35%;
+    }
+    
+    .col-date {
+      width: 35%;
+    }
+    
+    .col-caisse {
+      width: 20%;
     }
     
     th {
@@ -133,6 +163,9 @@
       text-transform: uppercase;
       font-size: 0.8rem;
       letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
     
     tr:last-child td {
@@ -153,6 +186,39 @@
       color: white;
     }
     
+    .scroll-info {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-top: 0.8rem;
+      text-align: center;
+      font-style: italic;
+    }
+    
+    .empty-row {
+      color: var(--gray);
+      font-style: italic;
+    }
+    
+    /* Style personnalisé pour la scrollbar */
+    .table-container::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    .table-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 0 0 10px 10px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+    
     @media (max-width: 768px) {
       body {
         padding: 1rem;
@@ -160,6 +226,11 @@
       
       .container {
         grid-template-columns: 1fr;
+      }
+      
+      th, td {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
       }
     }
     
@@ -190,12 +261,25 @@
 
     <div class="section">
       <h2>📋 Tickets en attente <span id="nb-attente" class="badge">0</span></h2>
-      <table>
-        <thead>
-          <tr><th>Ticket</th><th>Heure</th></tr>
-        </thead>
-        <tbody id="liste-attente"></tbody>
-      </table>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-ticket">Ticket</th>
+              <th class="col-heure">Heure</th>
+              <th class="col-date">Date</th>
+            </tr>
+          </thead>
+        </table>
+        <div class="table-container">
+          <table>
+            <tbody id="liste-attente">
+              <tr class="empty-row"><td colspan="3">Aucun ticket en attente</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="scroll-info">Affichage des 10 derniers tickets</p>
     </div>
 
     <div class="section">
@@ -210,23 +294,43 @@
 
     <div class="section">
       <h2>📢 Tickets appelés et traités</h2>
-      <table>
-        <thead>
-          <tr><th>Ticket</th><th>Caisse</th><th>Heure</th></tr>
-        </thead>
-        <tbody id="liste-appels"></tbody>
-      </table>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-ticket">Ticket</th>
+              <th class="col-caisse">Caisse</th>
+              <th class="col-heure">Heure</th>
+              <th class="col-date">Date</th>
+            </tr>
+          </thead>
+        </table>
+        <div class="table-container">
+          <table>
+            <tbody id="liste-appels">
+              <tr class="empty-row"><td colspan="4">Aucun ticket traité</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="scroll-info">Affichage des 10 derniers tickets traités</p>
     </div>
   </div>
 
   <script>
     const API = ""; //chemin relatif ou URL de l'API
+    const MAX_ROWS = 10; // Nombre maximum de lignes à afficher
+    
     function getTicket() {
       fetch(`${API}/ticket`, { method: "POST" })
         .then(res => res.json())
         .then(data => {
           document.getElementById("ticket-message").innerText = `Votre ticket est le : ${data.code}`;
           refresh();
+        })
+        .catch(error => {
+          console.error("Erreur:", error);
+          document.getElementById("ticket-message").innerText = "Erreur lors de la génération du ticket";
         });
     }
 
@@ -244,31 +348,70 @@
             document.getElementById("appel-message").innerText = `🎤 Le Ticket ${data.code} est appelé à la caisse N°${data.numeroAppel}`;
             refresh();
           }
+        })
+        .catch(error => {
+          console.error("Erreur:", error);
+          document.getElementById("appel-message").innerText = "Erreur lors de l'appel du ticket";
         });
+    }
+
+    function formatDate(date) {
+      const d = new Date(date);
+      return d.toLocaleDateString('fr-FR');
+    }
+
+    function formatTime(date) {
+      const d = new Date(date);
+      return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     }
 
     function refresh() {
       fetch(`${API}/etat`)
         .then(res => res.json())
         .then(data => {
-          const attente = data.enAttente;
-          const appels = data.appels;
+          const attente = data.enAttente || [];
+          const appels = data.appels || [];
 
-          document.getElementById("nb-attente").innerText = data.totalAttente;
+          document.getElementById("nb-attente").innerText = attente.length;
 
-          let htmlAttente = "";
-          attente.forEach(t => {
-            const date = new Date(t.timestamp).toLocaleTimeString();
-            htmlAttente += `<tr><td>${t.code}</td><td>${date}</td></tr>`;
-          });
-          document.getElementById("liste-attente").innerHTML = htmlAttente;
+          // Tickets en attente
+          const attenteBody = document.getElementById("liste-attente");
+          if (attente.length === 0) {
+            attenteBody.innerHTML = '<tr class="empty-row"><td colspan="3">Aucun ticket en attente</td></tr>';
+          } else {
+            let htmlAttente = "";
+            const lastAttente = attente.slice(-MAX_ROWS);
+            lastAttente.forEach(t => {
+              htmlAttente += `<tr>
+                <td class="col-ticket">${t.code}</td>
+                <td class="col-heure">${formatTime(t.timestamp)}</td>
+                <td class="col-date">${formatDate(t.timestamp)}</td>
+              </tr>`;
+            });
+            attenteBody.innerHTML = htmlAttente;
+          }
 
-          let htmlAppels = "";
-          appels.forEach(t => {
-            const date = new Date(t.timestamp).toLocaleTimeString();
-            htmlAppels += `<tr><td>${t.code}</td><td>${t.numeroAppel}</td><td>${date}</td></tr>`;
-          });
-          document.getElementById("liste-appels").innerHTML = htmlAppels;
+          // Tickets traités
+          const appelsBody = document.getElementById("liste-appels");
+          if (appels.length === 0) {
+            appelsBody.innerHTML = '<tr class="empty-row"><td colspan="4">Aucun ticket traité</td></tr>';
+          } else {
+            let htmlAppels = "";
+            const lastAppels = appels.slice(-MAX_ROWS);
+            lastAppels.forEach(t => {
+              htmlAppels += `<tr>
+                <td class="col-ticket">${t.code}</td>
+                <td class="col-caisse">${t.numeroAppel}</td>
+                <td class="col-heure">${formatTime(t.timestamp)}</td>
+                <td class="col-date">${formatDate(t.timestamp)}</td>
+              </tr>`;
+            });
+            appelsBody.innerHTML = htmlAppels;
+          }
+        })
+        .catch(error => {
+          console.error("Erreur:", error);
+          document.getElementById("appel-message").innerText = "Erreur lors du chargement des données";
         });
     }
 
